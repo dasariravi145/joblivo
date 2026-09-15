@@ -1,0 +1,105 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:joblivo-api}
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:joblivo_db}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:postgres}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:postgres}}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+      status:
+        order: DOWN, OUT_OF_SERVICE, DEGRADED, UP, UNKNOWN
+
+joblivo:
+  ai:
+    enabled: ${JOBLIVO_AI_ENABLED:false}
+    default-provider: ${JOBLIVO_AI_DEFAULT_PROVIDER:BEDROCK}
+    default-model: ${JOBLIVO_AI_DEFAULT_MODEL:anthropic.claude-3-5-sonnet-20241022-v2:0}
+    bedrock:
+      region: ${JOBLIVO_AI_BEDROCK_REGION:}
+      timeout-seconds: ${JOBLIVO_AI_BEDROCK_TIMEOUT_SECONDS:30}
+    providers:
+      bedrock:
+        enabled: ${JOBLIVO_AI_BEDROCK_ENABLED:false}
+        default-model: ${JOBLIVO_AI_BEDROCK_DEFAULT_MODEL:anthropic.claude-3-5-sonnet-20241022-v2:0}
+        allowed-models:
+          - ${JOBLIVO_AI_BEDROCK_DEFAULT_MODEL:anthropic.claude-3-5-sonnet-20241022-v2:0}
+          - anthropic.claude-3-haiku-20240307-v1:0
+          - amazon.titan-text-express-v1
+      openai:
+        enabled: ${JOBLIVO_AI_OPENAI_ENABLED:false}
+        default-model: ${JOBLIVO_AI_OPENAI_DEFAULT_MODEL:gpt-4o}
+        allowed-models:
+          - ${JOBLIVO_AI_OPENAI_DEFAULT_MODEL:gpt-4o}
+          - gpt-4o-mini
+      google:
+        enabled: ${JOBLIVO_AI_GOOGLE_ENABLED:false}
+        default-model: ${JOBLIVO_AI_GOOGLE_DEFAULT_MODEL:gemini-1.5-pro}
+        allowed-models:
+          - ${JOBLIVO_AI_GOOGLE_DEFAULT_MODEL:gemini-1.5-pro}
+          - gemini-1.5-flash
+    purpose-routes: {}
+  job-discovery:
+    enabled: ${JOBLIVO_JOB_DISCOVERY_ENABLED:true}
+    enabled-sources: ${JOBLIVO_JOB_DISCOVERY_ENABLED_SOURCES:}
+    default-max-candidates: ${JOBLIVO_JOB_DISCOVERY_DEFAULT_MAX_CANDIDATES:100}
+    freshness:
+      stale-after: ${JOBLIVO_JOB_DISCOVERY_FRESHNESS_STALE_AFTER:7d}
+    sources:
+      LINKEDIN:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_LINKEDIN_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_LINKEDIN_MAX_CANDIDATES:100}
+      NAUKRI:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_NAUKRI_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_NAUKRI_MAX_CANDIDATES:100}
+      FOUNDIT:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_FOUNDIT_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_FOUNDIT_MAX_CANDIDATES:100}
+      CUTSHORT:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_CUTSHORT_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_CUTSHORT_MAX_CANDIDATES:100}
+      INSTAHYRE:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_INSTAHYRE_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_INSTAHYRE_MAX_CANDIDATES:100}
+      COMPANY_CAREERS:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_COMPANY_CAREERS_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_COMPANY_CAREERS_MAX_CANDIDATES:100}
+      ATS:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_ATS_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_ATS_MAX_CANDIDATES:100}
+      OTHER:
+        enabled: ${JOBLIVO_JOB_DISCOVERY_SOURCE_OTHER_ENABLED:false}
+        max-candidates: ${JOBLIVO_JOB_DISCOVERY_SOURCE_OTHER_MAX_CANDIDATES:100}
+

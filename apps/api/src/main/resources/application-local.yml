@@ -1,0 +1,23 @@
+# =============================================================================
+# Joblivo API - Local Development Profile Configuration
+# =============================================================================
+
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: joblivo-api
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    com.joblivo: DEBUG
+    org.springframework.web: INFO
+    org.flywaydb: DEBUG
+    org.hibernate.SQL: DEBUG
